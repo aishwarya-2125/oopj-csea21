@@ -1,0 +1,67 @@
+Week 13:
+Write a program to illustrate JDBC.
+
+con.close();
+String url = " jdbc:mysql://localhost:3306/cse ";
+String userID = “username";
+String password = “password";
+
+try{
+Class.forName( " com.mysql.jdbc.Driver ");
+Connection con= DriverManager.getConnection(url,userID,password);
+}
+
+
+catch (ClassNotFoundException error) {
+System.err.println("Unable to load the JDBC/ODBC bridge." + error);
+System.exit(1);
+}
+
+
+catch (SQLException error) {
+System.err.println("Cannot connect to the database." + error);
+System.exit(2);
+}
+Select query Using Statement
+
+try{
+Class.forName( " com.mysql.jdbc.Driver ");
+Connection con= DriverManager.getConnection(url,userID,password);
+Statement stmt=con.cretaeStatement();
+String q=”select * from tab_name —--------”;
+ResultSet rs=stmt.executeQuery(q);
+while(rs.next())
+{
+rs.getXXXX(“column_name”);//XXXX is data type of a column in database table
+}
+}
+
+catch (Exception error) {
+System.err.println error);
+
+}
+ Select Query using  Using Prepared Statement
+
+ PreparedStatement pst = conn.prepareStatement("select * from users where username=? and password=?");
+            pst.setString(1, user);
+            pst.setString(2, pass);
+            ResultSet rs = pst.executeQuery();
+
+
+try{
+//load the drivers
+//Establish the connection
+CallableStatement cstmt=con.prepareCall("{call procedurename(?,?,?)}");
+
+cstmt.setInt(1,a);
+cstmt.setInt(2,b);
+
+cstmt.registerOutParameter(3, Types.INTEGER);
+
+cstmt.executeUpdate();
+
+int result=cstmt.getInt(3);
+}
+catch(SQLException se)
+{
+}

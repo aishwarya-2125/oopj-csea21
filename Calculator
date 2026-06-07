@@ -1,0 +1,39 @@
+import java.awt.*;
+import java.awt.event.*;
+
+class Calc extends Frame implements ItemListener {
+    TextField t1 = new TextField(10), t2 = new TextField(10), t3 = new TextField(10);
+    Choice ch = new Choice();
+
+    Calc() {
+        setLayout(new GridLayout(4, 2));
+        add(new Label("First"));  add(t1);
+        add(new Label("Second")); add(t2);
+        add(new Label("Result")); add(t3);
+
+        for (String op : new String[]{"select", "+", "-", "*", "/"}) ch.add(op);
+        ch.addItemListener(this);
+        add(ch);
+
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) { System.exit(0); }
+        });
+        setTitle("Calculator"); setSize(200, 300); setVisible(true);
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+        try {
+            int x = Integer.parseInt(t1.getText()), y = Integer.parseInt(t2.getText());
+            String op = ch.getSelectedItem();
+            if      (op.equals("+")) t3.setText((x + y) + "");
+            else if (op.equals("-")) t3.setText((x - y) + "");
+            else if (op.equals("*")) t3.setText((x * y) + "");
+            else if (op.equals("/")) t3.setText(y != 0 ? (x / y) + "" : "Div by 0!");
+            else                     t3.setText("Pick an operator");
+        } catch (NumberFormatException ex) {
+            t3.setText("Invalid input");
+        }
+    }
+
+    public static void main(String[] a) { new Calc(); }
+}

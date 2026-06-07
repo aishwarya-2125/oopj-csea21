@@ -1,0 +1,72 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.applet.*;
+
+/* <applet code="LoginAuth" width=400 height=300>
+    <param name="uname" value="abcd">
+    <param name="pwd" value="1234">
+</applet> 
+*/
+
+public class LoginAuth extends Applet implements ActionListener {
+
+    String n, p, res = "";
+    Label l1, l2;
+    TextField t1, t2;
+    Button b1;
+
+    public void init() {
+        // Initialize components
+        l1 = new Label("Username: ");
+        l2 = new Label("Password: ");
+        t1 = new TextField(20);
+        t2 = new TextField(20);
+        
+        // Mask the password field characters
+        t2.setEchoChar('*'); 
+        
+        b1 = new Button("Login");
+        
+        // Add action listener to the button
+        b1.addActionListener(this);
+
+        // Add components to the applet layout
+        add(l1); 
+        add(t1);
+        add(l2); 
+        add(t2);
+        add(b1);
+    }
+
+    public void start() {
+        // Fetch parameters from the HTML/Applet tag
+        n = getParameter("uname");
+        p = getParameter("pwd");
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        String s1 = t1.getText();
+        String s2 = t2.getText();
+
+        // Check if entered credentials match the applet parameters
+        if (s1.equals(n) && s2.equals(p)) {
+            res = "Authorized";
+        } else {
+            res = "Invalid Credentials";
+        }
+
+        // Clear the text fields after clicking login
+        t1.setText("");
+        t2.setText("");
+
+        // Trigger the paint method to display results
+        repaint();
+    }
+
+    public void paint(Graphics g) {
+        // Display the expected credentials and authentication result
+        g.drawString("Expected Username: " + n, 50, 150);
+        g.drawString("Expected Password: " + p, 50, 170);
+        g.drawString("Status: " + res, 50, 210);
+    }
+}

@@ -1,67 +1,37 @@
-Week 13:
-Write a program to illustrate JDBC.
+import java.sql.*;
 
-con.close();
-String url = " jdbc:mysql://localhost:3306/cse ";
-String userID = “username";
-String password = “password";
+public class JDBCDemo {
+    static final String URL  = "jdbc:mysql://localhost:3306/cse";
+    static final String USER = "username";
+    static final String PASS = "password";
 
-try{
-Class.forName( " com.mysql.jdbc.Driver ");
-Connection con= DriverManager.getConnection(url,userID,password);
-}
+    public static void main(String[] args) throws Exception {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection(URL, USER, PASS);
 
+        // 1. Simple Statement
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM tab_name");
+        while (rs.next())
+            System.out.println(rs.getString("column_name"));
 
-catch (ClassNotFoundException error) {
-System.err.println("Unable to load the JDBC/ODBC bridge." + error);
-System.exit(1);
-}
+        // 2. Prepared Statement
+        PreparedStatement pst = con.prepareStatement(
+            "SELECT * FROM users WHERE username=? AND password=?");
+        pst.setString(1, "user");
+        pst.setString(2, "pass");
+        ResultSet rs2 = pst.executeQuery();
+        while (rs2.next())
+            System.out.println(rs2.getString("username"));
 
+        // 3. Callable Statement (Stored Procedure)
+        CallableStatement cst = con.prepareCall("{call procedurename(?,?,?)}");
+        cst.setInt(1, 10);
+        cst.setInt(2, 20);
+        cst.registerOutParameter(3, Types.INTEGER);
+        cst.executeUpdate();
+        System.out.println("Result: " + cst.getInt(3));
 
-catch (SQLException error) {
-System.err.println("Cannot connect to the database." + error);
-System.exit(2);
-}
-Select query Using Statement
-
-try{
-Class.forName( " com.mysql.jdbc.Driver ");
-Connection con= DriverManager.getConnection(url,userID,password);
-Statement stmt=con.cretaeStatement();
-String q=”select * from tab_name —--------”;
-ResultSet rs=stmt.executeQuery(q);
-while(rs.next())
-{
-rs.getXXXX(“column_name”);//XXXX is data type of a column in database table
-}
-}
-
-catch (Exception error) {
-System.err.println error);
-
-}
- Select Query using  Using Prepared Statement
-
- PreparedStatement pst = conn.prepareStatement("select * from users where username=? and password=?");
-            pst.setString(1, user);
-            pst.setString(2, pass);
-            ResultSet rs = pst.executeQuery();
-
-
-try{
-//load the drivers
-//Establish the connection
-CallableStatement cstmt=con.prepareCall("{call procedurename(?,?,?)}");
-
-cstmt.setInt(1,a);
-cstmt.setInt(2,b);
-
-cstmt.registerOutParameter(3, Types.INTEGER);
-
-cstmt.executeUpdate();
-
-int result=cstmt.getInt(3);
-}
-catch(SQLException se)
-{
+        con.close();
+    }
 }
